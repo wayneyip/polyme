@@ -12,8 +12,7 @@
   "scripts": {
     "start": "webpack-dev-server --mode development",
     "prebuild": "rimraf ./build && mkdir ./build",
-    "build": "webpack --mode production",
-    "heroku-postbuild": "webpack -p"
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "three": "^0.98.0",

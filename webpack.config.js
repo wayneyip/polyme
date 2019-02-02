@@ -6,6 +6,9 @@ const buildPath = './build/';
 
 
 module.exports = {
+  devServer: {
+    port: (process.env.PORT || 8080)
+  },
   node: {
     fs: 'empty',
   },

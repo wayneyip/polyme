@@ -15,8 +15,8 @@ const seedScene = new SeedScene();
 scene.add(seedScene);
 
 // camera
-camera.position.set(0,50,100);
-camera.lookAt(0,35,0);
+camera.position.set(50,35,100);
+camera.lookAt(50,35,0);
 
 // renderer
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -64,40 +64,55 @@ window.addEventListener('mousemove', function(e){
   leg.rotateX(-1.57);
 })
 
-window.addEventListener('keypress', function(e){
+window.addEventListener('keydown', function(e){
 
   if (e.code == 'KeyA')
   {
-    var body = scene.getObjectByName("body_MSH");
-
-    body.material = new THREE.MeshPhongMaterial(
-            {
-                color: 0xe4b98e,
-                skinning: true
-            } 
-        );
+    var body = scene.getObjectByName("pelvis_JNT");
+    body.rotateX(-0.05);
   }
-  else if (e.code == 'KeyS')
+
+  if (e.code == 'KeyD')
+  {
+    var body = scene.getObjectByName("pelvis_JNT");
+    body.rotateX(0.05);
+  }
+})
+
+window.addEventListener('keypress', function(e){
+
+  if (e.code == 'KeyQ')
   {
     var body = scene.getObjectByName("body_MSH");
 
     body.material = new THREE.MeshPhongMaterial(
-            {
-                color: 0xd99164,
-                skinning: true
-            } 
-        );
+      {
+        color: 0xe4b98e,
+        skinning: true
+      } 
+    );
   }
-  else if (e.code == 'KeyD')
+  else if (e.code == 'KeyW')
   {
     var body = scene.getObjectByName("body_MSH");
 
     body.material = new THREE.MeshPhongMaterial(
-            {
-                color: 0xbb6d4a,
-                skinning: true
-            } 
-        );
+      {
+        color: 0xd99164,
+        skinning: true
+      } 
+    );
+  }
+  else if (e.code == 'KeyE')
+  {
+    var body = scene.getObjectByName("body_MSH");
+
+    body.material = new THREE.MeshPhongMaterial(
+      {
+          color: 0xbb6d4a,
+          skinning: true
+      } 
+    );
   }
   else if (e.code == 'KeyZ')
   {

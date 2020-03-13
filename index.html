@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>PolyMe</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
 </head>
 <body>
 	<script src='https://threejs.org/build/three.js'></script>
@@ -11,5 +13,112 @@
 	<script src='src/Lights.js'></script>
 	<script src='src/Scene.js'></script>
 	<script src='src/entry.js'></script>
+
+	<div class="type-menu">
+		<button class="type-button type-button-selected" onclick="openTypeTab(event, 'body')">BODY</button>
+		<button class="type-button" onclick="openTypeTab(event, 'clothes')">CLOTHES</button>
+		<div class="type" id="body">
+			<div class="category-menu">
+				<button class="category-button category-button-selected" onclick="openCategoryTab(event, 'overall')">OVERALL</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'face')">FACE</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'hair')">HAIR</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'eyes')">EYES</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'brows')">BROWS</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'nose')">NOSE</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'mouth')">MOUTH</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'ears')">EARS</button>
+			</div>
+		</div>
+		<div class="type" id="clothes">
+			<div class="category-menu">
+				<button class="category-button category-button-selected" onclick="openCategoryTab(event, 'top')">TOP</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'bottom')">BOTTOM</button>
+				<button class="category-button" onclick="openCategoryTab(event, 'shoes')">SHOES</button>
+				<div>
+					<div class="category" id="top">
+						<div class="item-menu">
+							<button class="item-button">1</button>
+							<button class="item-button">2</button>
+							<button class="item-button">3</button>
+							<button class="item-button">4</button>
+							<button class="item-button">5</button>
+							<button class="item-button">6</button>
+							<button class="item-button">7</button>
+							<button class="item-button">8</button>
+							<button class="item-button">9</button>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="category" id="bottom">
+						<div class="item-menu">
+							<button class="item-button">A</button>
+							<button class="item-button">B</button>
+							<button class="item-button">C</button>
+							<button class="item-button">D</button>
+							<button class="item-button">E</button>
+							<button class="item-button">F</button>
+							<button class="item-button">G</button>
+							<button class="item-button">H</button>
+							<button class="item-button">I</button>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="category" id="shoes">
+						<div class="item-menu">
+							<button class="item-button">a</button>
+							<button class="item-button">b</button>
+							<button class="item-button">c</button>
+							<button class="item-button">d</button>
+							<button class="item-button">e</button>
+							<button class="item-button">f</button>
+							<button class="item-button">g</button>
+							<button class="item-button">h</button>
+							<button class="item-button">i</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function openTypeTab(event, typeName){
+			// Open tab
+			var types = document.getElementsByClassName("type");
+			for (var i=0; i < types.length; i++)
+			{
+				types[i].style.display = "none";
+			}
+			document.getElementById(typeName).style.display = "block";
+
+			// Highlight selected tab
+			var typeButtons = document.getElementsByClassName("type-button");
+			for (var i=0; i < typeButtons.length; i++)
+			{
+				typeButtons[i].className = typeButtons[i].className.replace(" type-button-selected", "");
+			}
+			event.currentTarget.className += " type-button-selected";
+		}
+
+		function openCategoryTab(evt, categoryName){
+			// Open tab
+			var categories = document.getElementsByClassName("category");
+			for (var i=0; i < categories.length; i++)
+			{
+				categories[i].style.display = "none";
+			}
+			document.getElementById(categoryName).style.display = "block";
+
+			// Highlight selected tab
+			var categoryButtons = document.getElementsByClassName("category-button");
+			for (var i=0; i < categoryButtons.length; i++)
+			{
+				categoryButtons[i].className = categoryButtons[i].className.replace(" category-button-selected", "");
+			}
+			evt.currentTarget.className += " category-button-selected";
+		}
+	</script>
 </body>
 </html>

@@ -1,0 +1,85 @@
+.type-menu {
+	position: fixed;
+	top: 20%;
+	right: 10%;
+
+	background-color: gray;
+	min-width: 500px;
+	text-align: justify;
+}
+
+.type-button {
+  border: none;
+  background-color: black;
+  color: white;
+  padding: 15px 32px;
+  display: inline-block;
+  width: 49.5%;
+
+  font-family: 'Raleway', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.type-button-selected {
+	background-color: white;
+	color: gray;
+}
+
+.type-button:hover {
+  background-color: white;
+  color: gray;
+}
+
+.category-menu {
+	max-width: 500px;
+	text-align: justify;
+	
+}
+
+.category-button {
+  border: none;
+  background-color: black;
+  color: white;
+  padding: 15px 32px;
+  display: inline-block;
+  width: 33%;
+
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.category-button-selected {
+  background-color: white;
+  color: gray;
+}
+
+.category-button:hover {
+  background-color: white;
+  color: gray;
+}
+
+.item-menu {
+	max-width: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+.item-button {
+	border: none;
+  background-color: black;
+  color: white;
+  padding: 15px 15px;
+  display: inline-block;
+  width: 33%;
+
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.item-button:hover {
+  background-color: white;
+  color: gray;
+}

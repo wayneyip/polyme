@@ -6,13 +6,9 @@
  * handles window resizes.
  * 
  */
-global.THREE = require('three');
-import { WebGLRenderer, PerspectiveCamera, Scene, Vector3 } from 'three';
-import SeedScene from './objects/Scene.js';
-
-const scene = new Scene();
-const camera = new PerspectiveCamera();
-const renderer = new WebGLRenderer({antialias: true});
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera();
+const renderer = new THREE.WebGLRenderer({antialias: true});
 const seedScene = new SeedScene();
 
 // scene

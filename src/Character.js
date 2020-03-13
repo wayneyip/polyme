@@ -1,8 +1,4 @@
-import {Group} from 'three';
-import GLTFLoader from 'three-gltf-loader';
-
-
-export default class Character extends Group {
+class Character extends THREE.Group {
   constructor() {
     
     // Initial setup
@@ -13,9 +9,9 @@ export default class Character extends Group {
     var rig;
     
     // Loader
-    var gltfLoader = new GLTFLoader();
+    var gltfLoader = new THREE.GLTFLoader();
     var texLoader = new THREE.TextureLoader();
-    gltfLoader.load('src/objects/Character/character.gltf', (file)=>{
+    gltfLoader.load('assets/character.gltf', (file)=>{
 
         body_obj = file.scene.getObjectByName('body_MSH');
         LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
@@ -47,7 +43,7 @@ export default class Character extends Group {
 
         var eyeMaterial = new THREE.MeshPhongMaterial( 
             {
-                map:        texLoader.load('src/objects/Character/eye.png'),
+                map:        texLoader.load('assets/eye.png'),
                 specular:   0xffffff,
                 shininess:  50,
                 skinning: true

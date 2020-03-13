@@ -1,13 +1,11 @@
-import { Group, DirectionalLight, SpotLight, AmbientLight, HemisphereLight, Color } from 'three';
-
-export default class BasicLights extends Group {
+class BasicLights extends THREE.Group {
   constructor(...args) {
     super(...args);
 
-    const dir = new DirectionalLight(0xFFFFFF, 0.2);
-    const spot = new SpotLight(0xFFFFFF, .2, 0, 0.8, 1, 1);
-    const ambi = new AmbientLight( 0x404040 , 0.66);
-    const hemi = new HemisphereLight( 0xFFFFFF, 0x080820, 1 )
+    const dir = new THREE.DirectionalLight(0xFFFFFF, 0.2);
+    const spot = new THREE.SpotLight(0xFFFFFF, .2, 0, 0.8, 1, 1);
+    const ambi = new THREE.AmbientLight( 0x404040 , 0.66);
+    const hemi = new THREE.HemisphereLight( 0xFFFFFF, 0x080820, 1 )
 
     spot.position.set(0, 50, 100);
     spot.target.position.set(0,0,0);

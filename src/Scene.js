@@ -1,10 +1,4 @@
-import { Group } from 'three';
-import Land from './Land/Land.js';
-import Flower from './Flower/Flower.js';
-import Character from './Character/Character.js';
-import BasicLights from './Lights.js';
-
-export default class SeedScene extends Group {
+class SeedScene extends THREE.Group {
   constructor() {
     super();
 

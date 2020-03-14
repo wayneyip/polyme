@@ -1,99 +1,92 @@
 class Character extends THREE.Group {
-  constructor() {
+
+    constructor(manager) {
     
-    // Initial setup
-    super();
-    this.name = 'character_GRP';
-    var body_obj, LF_eye_obj, RT_eye_obj, LF_eyebrow_obj, RT_eyebrow_obj; 
-    var underwear_obj, pants_obj, jeans_obj;
-    var rig;
-    
-    // Loader
-    var gltfLoader = new THREE.GLTFLoader();
-    var texLoader = new THREE.TextureLoader();
-    gltfLoader.load('assets/character.gltf', (file)=>{
+        // Initial setup
+        super();
+        this.name = 'character_GRP';
+        this.data = {
+            'body' : {
+                'face' : [],
+                'hair' : [],
+                'eyes' : [],
+                'brows' : [],
+                'nose' : [],
+                'mouth' : [],
+                'ears' : []
+            },
+            'clothes' : {
+                'top' : [],
+                'bottom' : [],
+                'shoes' : []
+            }
+        };
 
-        body_obj = file.scene.getObjectByName('body_MSH');
-        LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
-        RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
-        LF_eyebrow_obj = file.scene.getObjectByName('LF_eyebrow_MSH');
-        RT_eyebrow_obj = file.scene.getObjectByName('RT_eyebrow_MSH');
-        underwear_obj = file.scene.getObjectByName('underwear_MSH');
-        pants_obj = file.scene.getObjectByName('pants_MSH');
-        jeans_obj = file.scene.getObjectByName('jeans_MSH');
-        rig = file.scene.getObjectByName('root_JNT');
+        // Loader
+        var gltfLoader = new THREE.GLTFLoader(manager);
+        var texLoader = new THREE.TextureLoader();
+        gltfLoader.load('assets/character.gltf', (file)=>{
 
-        var skinMaterial = new THREE.MeshPhongMaterial(
+            var LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
+            var RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
+
+            var eyeMaterial = new THREE.MeshPhongMaterial( 
+                {
+                    map:        texLoader.load('assets/eye.png'),
+                    specular:   0xffffff,
+                    shininess:  50,
+                    skinning: true
+                } 
+            );
+            LF_eye_obj.material = eyeMaterial;
+            RT_eye_obj.material = eyeMaterial;
+
+            var body_obj = file.scene.getObjectByName('body_MSH');
+            var bodyMaterial = new THREE.MeshPhongMaterial({skinning: true});
+            body_obj.material = bodyMaterial;
+
+            var sceneObjects = file.scene.children[0].children;
+            while (sceneObjects.length > 0)
             {
-                color: 0xe4b98e,
-                skinning: true
-            } 
-        );
-        body_obj.material = skinMaterial;
-        body_obj.castShadow = true;
-        
-        var hairMaterial = new THREE.MeshPhongMaterial( 
-            {
-                color: 0x555555,
-                skinning: true
-            } 
-        );
-        LF_eyebrow_obj.material = hairMaterial;
-        RT_eyebrow_obj.material = hairMaterial;
+                var sceneObject = sceneObjects[0];
+                if (sceneObject.name.endsWith('_GRP')) 
+                {
+                    var category = sceneObject.name.substr(0, sceneObject.name.length-4);
+                    var type = this.getTypeFromCategory(category);
 
-        var eyeMaterial = new THREE.MeshPhongMaterial( 
-            {
-                map:        texLoader.load('assets/eye.png'),
-                specular:   0xffffff,
-                shininess:  50,
-                skinning: true
-            } 
-        );
-        LF_eye_obj.material = eyeMaterial;
-        RT_eye_obj.material = eyeMaterial;
+                    for (var i=0; i < sceneObject.children.length; i++)
+                    {
+                        var itemName = sceneObject.children[0].name;
+                        this.data[type][category].push(itemName);
+                    }
+                }
+                this.add(sceneObject);
+            }
+            // var rig = file.scene.getObjectByName('root_JNT');
+            // var helper = new THREE.SkeletonHelper(rig.children[0]);
+            // this.add(helper);
+        });
+    }
 
-        var underwearMaterial = new THREE.MeshPhongMaterial( 
-            {
-                color: 0x111111,
-                skinning: true,
-                visible: false
-            } 
-        );
-        underwear_obj.material = underwearMaterial;
-        underwear_obj.castShadow = true;
+    getTypeFromCategory(category){
 
-        var pantsMaterial = new THREE.MeshPhongMaterial( 
-            {
-                color: 0x654321,
-                skinning: true,
-                visible: true
-            } 
-        );
-        pants_obj.material = pantsMaterial;
-        pants_obj.castShadow = true;
-
-        var jeansMaterial = new THREE.MeshPhongMaterial( 
-            {
-                color: 0x1560bd,
-                skinning: true,
-                visible: false
-            } 
-        );
-        jeans_obj.material = jeansMaterial;
-        jeans_obj.castShadow = true;
-
-        this.add(body_obj);
-        this.add(LF_eye_obj);
-        this.add(RT_eye_obj);
-        this.add(LF_eyebrow_obj);
-        this.add(RT_eyebrow_obj);
-        this.add(underwear_obj);
-        this.add(pants_obj);
-        this.add(jeans_obj);
-        this.add(rig);
-
-        var helper = new THREE.SkeletonHelper(rig.children[0]);
-        this.add(helper);
-    });
-  }
+        if (category == 'face' || 
+            category == 'hair' || 
+            category == 'eyes' || 
+            category == 'brows' || 
+            category == 'nose' || 
+            category == 'mouth' || 
+            category == 'ears'
+        ){
+            return 'body';
+        }
+        else if (
+            category == 'top' ||
+            category == 'bottom' ||
+            category == 'shoes'
+         ){
+            return 'clothes';
+         }
+         return "";
+    }
 }

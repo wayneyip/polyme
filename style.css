@@ -51,7 +51,7 @@
   color: white;
   padding: 15px 32px;
   display: inline-block;
-  width: 33%;
+  width: 33.3%;
 
   font-family: 'Raleway', sans-serif;
   font-size: 16px;
@@ -74,7 +74,6 @@
 
 .category {
 	display: flex;
-	justify-content: space-around;
 	flex-wrap: wrap;
 }
 
@@ -84,7 +83,7 @@
   color: white;
   padding: 15px 15px;
   display: inline-block;
-  min-width: 33%;
+  min-width: 33.3%;
 
   font-family: 'Raleway', sans-serif;
   font-size: 16px;

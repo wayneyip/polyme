@@ -1,4 +1,4 @@
-class BasicLights extends THREE.Group {
+class Lights extends THREE.Group {
   constructor(...args) {
     super(...args);
 

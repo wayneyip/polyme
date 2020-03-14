@@ -59,23 +59,26 @@ window.addEventListener('keypress', function(e){
 	}
 })
 
-function selectItem(){
-	// Make all other items in category not visible
+function selectItem(categoryName, selectedItemName){
 
-	// Make selected item visible
-	
-}
+	for (let type in character.data) {
+		for (let category in character.data[type]) {
+			if (category == categoryName) {
+				for (let item in character.data[type][category]) {
 
-function populateItem(categoryName){
-	var group = character.getObjectByName(categoryName+"_GRP");
-	var list = group.children;
-	var categoryElement = document.getElementById(categoryName);
-	for (var i=0; i < list.length; i++)
-	{
-		var itemName = list[i].name;
-		if (categoryElement)
-		{
-			categoryElement.innerHTML += '<button class="item-button" onclick="selectItem()">'+itemName+'</button>';
+					let itemName = character.data[type][category][item];
+					let selectedObj = character.getObjectByName(itemName);
+
+					if (itemName == selectedItemName) {
+						selectedObj.material.visible = true;
+						console.log(itemName + " visible");
+					}
+					else {
+						selectedObj.material.visible = false;
+						console.log(itemName + " not visible");
+					}
+				}
+			}
 		}
 	}
 }
@@ -83,11 +86,26 @@ function populateItem(categoryName){
 function populateItems(){
 
 	if(isCharLoaded) {
-		var character = scene.children[0].getObjectByName('character_GRP');
-		console.log(character.data);
-		populateItem("hair");
-		populateItem("top");
-		populateItem("bottom");
+		for (let type in character.data) {
+			for (let category in character.data[type]) {
+				for (let item in character.data[type][category]) {
+
+					let categoryElement = document.getElementById(category);
+					if (categoryElement)
+					{
+						let itemName = character.data[type][category][item];
+
+						let newButton = document.createElement('BUTTON');
+						newButton.className += "item-button";
+						newButton.innerHTML = itemName;
+						newButton.addEventListener('click', function(){
+							selectItem(category, itemName)
+						});
+						categoryElement.appendChild(newButton);
+					}
+				}
+			}
+		}
     } 
     else {
        window.setTimeout(populateItems, 1000);

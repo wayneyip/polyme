@@ -56,8 +56,14 @@ class Character extends THREE.Group {
 
                     for (var i=0; i < sceneObject.children.length; i++)
                     {
-                        var itemName = sceneObject.children[0].name;
+                        var itemName = sceneObject.children[i].name;
                         this.data[type][category].push(itemName);
+                        sceneObject.children[i].material = new THREE.MeshPhongMaterial({
+                            skinning: true,
+                            color: 0x444444,
+                            side: THREE.DoubleSide,
+                            castShadow: true
+                        });
                     }
                 }
                 this.add(sceneObject);

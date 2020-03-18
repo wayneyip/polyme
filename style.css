@@ -1,100 +1,34 @@
-.ui {
+.type-menu {
 	position: fixed;
 	top: 20%;
 	right: 10%;
 	width: 500px;
-	background-color: black;
-}
-
-.type-menu {
-	position: relative;
-	display: flex;
-	justify-content: space-around;
-}
-
-.type-button {
-  border: none;
-  background-color: black;
-  color: white;
-  padding: 15px 32px;
-  display: inline-block;
-  width: 50%;
-
-  font-family: 'Raleway', sans-serif;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.type-button-selected {
-	background-color: white;
-	color: gray;
-}
-
-.type-button:hover {
-  background-color: white;
-  color: gray;
-}
-
-.category-menu {
-	position: relative;
-	overflow: auto;
-}
-
-.type {
-	display: flex;
-	justify-content: space-around;
-}
-
-.category-button {
-  border: none;
-  background-color: black;
-  color: white;
-  padding: 15px 32px;
-  display: inline-block;
-  width: 33.33333%;
-
-  font-family: 'Raleway', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.category-button-selected {
-  background-color: white;
-  color: gray;
-}
-
-.category-button:hover {
-  background-color: white;
-  color: gray;
-}
-
-.item-menu {
-	position: relative;
-}
-
-.category {
-	display: flex;
-	flex-wrap: wrap;
 }
 
 .item-button {
-	border: none;
-  background-color: black;
-  color: white;
-  padding: 15px 15px;
+	list-style-type: none;
+	
+	padding: 30px;
+	border: solid 1px lightgray;
+	border-radius: 5px;
+	background-image: linear-gradient(white, lightgray, white);
+	height: 60px;
+	width: 60px;
+  
   display: inline-block;
-  min-width: 33.33333%;
+	text-align: center;
 
-  font-family: 'Raleway', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
+	margin-right: 10px;
+	margin-bottom: 10px;
 }
 
-.item-button:hover {
-  background-color: white;
-  color: gray;
+.item-button:hover, .ui-selecting {
+	border: solid 1px gray;
+	cursor: pointer;
 }
 
-.hidden {
-	display: none;
+.ui-selected {
+	border: solid 1px gray;
+	background-image: none;
+	background-color: white;
 }

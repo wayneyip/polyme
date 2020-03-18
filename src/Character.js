@@ -35,7 +35,7 @@ class Character extends THREE.Group {
                     map:        texLoader.load('assets/eye.png'),
                     specular:   0xffffff,
                     shininess:  50,
-                    skinning: true
+                    skinning:   true
                 } 
             );
             LF_eye_obj.material = eyeMaterial;
@@ -44,6 +44,7 @@ class Character extends THREE.Group {
             var body_obj = file.scene.getObjectByName('body_MSH');
             var bodyMaterial = new THREE.MeshPhongMaterial({skinning: true});
             body_obj.material = bodyMaterial;
+            body_obj.castShadow = true;
 
             var sceneObjects = file.scene.children[0].children;
             while (sceneObjects.length > 0)
@@ -61,9 +62,9 @@ class Character extends THREE.Group {
                         sceneObject.children[i].material = new THREE.MeshPhongMaterial({
                             skinning: true,
                             color: 0x444444,
-                            side: THREE.DoubleSide,
-                            castShadow: true
+                            side: THREE.DoubleSide
                         });
+                        sceneObject.children[i].castShadow = true;
                     }
                 }
                 this.add(sceneObject);

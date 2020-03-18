@@ -2,57 +2,65 @@
 <html>
 <head>
 	<title>PolyMe</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" type="text/css" media="all" /> 
+	<link rel="stylesheet" href="style.css" type="text/css">
+
 </head>
 <body>
 	<script src='https://threejs.org/build/three.js'></script>
 	<script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
 	<script src='node_modules/socket.io-client/dist/socket.io.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
 	<script src='src/Character.js'></script>
 	<script src='src/Lights.js'></script>
 	<script src='src/Environment.js'></script>
 	<script src='src/scene.js'></script>
 
-	<div class="ui">
-		<div class="type-menu">
-			<button id="body-button" class="type-button type-button-selected" onclick="openTypeTab(event, 'body')">BODY</button>
-			<button class="type-button" onclick="openTypeTab(event, 'clothes')">CLOTHES</button>
+	<div class="type-menu">
+		<ul class="list">
+			<li class="type-button"><a href="#body">BODY</a></li>
+			<li class="type-button"><a href="#clothes">CLOTHES</a></li>
+		</ul>
+		<div class="category-menu" id="body">
+			<ul class="list">
+				<li class="category-button"><a href="#overall">OVERALL</a></li>
+				<li class="category-button"><a href="#face">FACE</a></li>
+				<li class="category-button"><a href="#hair">HAIR</a></li>
+				<li class="category-button"><a href="#eyes">EYES</a></li>
+				<li class="category-button"><a href="#brows">BROWS</a></li>
+				<li class="category-button"><a href="#nose">NOSE</a></li>
+				<li class="category-button"><a href="#mouth">MOUTH</a></li>
+				<li class="category-button"><a href="#ears">EARS</a></li>
+			</ul>
+			<div class="item-menu" id="overall">
+			</div>
+			<div class="item-menu" id="face">
+			</div>
+			<div class="item-menu" id="hair">
+			</div>
+			<div class="item-menu" id="eyes">
+			</div>
+			<div class="item-menu" id="brows">
+			</div>
+			<div class="item-menu" id="nose">
+			</div>
+			<div class="item-menu" id="mouth">
+			</div>
+			<div class="item-menu" id="ears">
+			</div>
 		</div>
-		<div class="category-menu">
-			<div class="type" id="body">
-				<button id="overall-button" class="category-button category-button-selected" onclick="openCategoryTab(event, 'overall')">OVERALL</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'face')">FACE</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'hair')">HAIR</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'eyes')">EYES</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'brows')">BROWS</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'nose')">NOSE</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'mouth')">MOUTH</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'ears')">EARS</button>
+		<div class="category-menu" id="clothes">
+			<ul class="list">
+				<li class="category-button"><a href="#top">TOP</a></li>
+				<li class="category-button"><a href="#bottom">BOTTOM</a></li>
+				<li class="category-button"><a href="#shoes">SHOES</a></li>
+			</ul>
+			<div class="item-menu" id="top">
 			</div>
-			<div class="type" id="clothes">
-				<button class="category-button category-button-selected" onclick="openCategoryTab(event, 'top')">TOP</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'bottom')">BOTTOM</button>
-				<button class="category-button" onclick="openCategoryTab(event, 'shoes')">SHOES</button>
+			<div class="item-menu" id="bottom">
 			</div>
-		</div>
-		<div class="item-menu">
-			<div class="category" id="hair">
-			</div>
-			<div class="category" id="top">
-			</div>
-			<div class="category" id="bottom">
-			</div>
-			<div class="category" id="shoes">
-				<button class="item-button">a</button>
-				<button class="item-button">b</button>
-				<button class="item-button">c</button>
-				<button class="item-button">d</button>
-				<button class="item-button">e</button>
-				<button class="item-button">f</button>
-				<button class="item-button">g</button>
-				<button class="item-button">h</button>
-				<button class="item-button">i</button>
+			<div class="item-menu" id="shoes">
 			</div>
 		</div>
 	</div>

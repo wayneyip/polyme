@@ -48,18 +48,9 @@ window.addEventListener('keypress', function(e){
 		var body = scene.getObjectByName("body_MSH");
 		body.material.color = new THREE.Color(0xbb6d4a);
 	}
-	else if (e.code == 'KeyC')
-	{
-		var underwear = scene.getObjectByName("underwear_MSH");
-		var pants = scene.getObjectByName("pants_MSH");
-		var jeans = scene.getObjectByName("jeans_MSH");
-		underwear.material.visible = false;
-		pants.material.visible = false;
-		jeans.material.visible = true;
-	}
 })
 
-function selectItem(categoryName, selectedItemName){
+function selectItem(event, categoryName, selectedItemName){
 
 	for (let type in character.data) {
 		for (let category in character.data[type]) {
@@ -71,11 +62,9 @@ function selectItem(categoryName, selectedItemName){
 
 					if (itemName == selectedItemName) {
 						selectedObj.material.visible = true;
-						console.log(itemName + " visible");
 					}
 					else {
 						selectedObj.material.visible = false;
-						console.log(itemName + " not visible");
 					}
 				}
 			}
@@ -95,16 +84,25 @@ function populateItems(){
 					{
 						let itemName = character.data[type][category][item];
 
-						let newButton = document.createElement('BUTTON');
+						let newButton = document.createElement('LI');
 						newButton.className += "item-button";
 						newButton.innerHTML = itemName;
 						newButton.addEventListener('click', function(){
-							selectItem(category, itemName)
+							selectItem(event, category, itemName)
 						});
 						categoryElement.appendChild(newButton);
+						console.log(newButton);
 					}
 				}
 			}
+		}
+		// Select first item in every category by default
+		let itemMenus = document.getElementsByClassName('item-menu');
+		for (let i=0; i < itemMenus.length; i++) {
+			if (itemMenus[i].children.length > 0) {
+				itemMenus[i].children[0].classList.add('ui-selected');
+				itemMenus[i].children[0].click();
+			}	
 		}
     } 
     else {
@@ -112,7 +110,7 @@ function populateItems(){
     }
 }
 
-function openTypeTab(event, typeName){
+function selectType(event, typeName){
 	// Open tab
 	var types = document.getElementsByClassName("type");
 	for (var i=0; i < types.length; i++)
@@ -124,17 +122,9 @@ function openTypeTab(event, typeName){
 	}
 	selectedType = document.getElementById(typeName);
 	selectedType.className = selectedType.className.replace(" hidden", "");
-
-	// Highlight selected tab
-	var typeButtons = document.getElementsByClassName("type-button");
-	for (var i=0; i < typeButtons.length; i++)
-	{
-		typeButtons[i].className = typeButtons[i].className.replace(" type-button-selected", "");
-	}
-	event.currentTarget.className += " type-button-selected";
 }
 
-function openCategoryTab(evt, categoryName){
+function selectCategory(evt, categoryName){
 	// Open tab
 	var categories = document.getElementsByClassName("category");
 	for (var i=0; i < categories.length; i++)
@@ -145,17 +135,20 @@ function openCategoryTab(evt, categoryName){
 		}
 	}
 	selectedCategory = document.getElementById(categoryName);
-	selectedCategory.className = selectedCategory.className.replace(" hidden", "");
-
-	// Highlight selected tab
-	var categoryButtons = document.getElementsByClassName("category-button");
-	for (var i=0; i < categoryButtons.length; i++)
-	{
-		categoryButtons[i].className = categoryButtons[i].className.replace(" category-button-selected", "");
-	}
-	evt.currentTarget.className += " category-button-selected";
+	selectedCategory.className = selectedCategory.className.replace(" hidden", ""); 
 }
 
-populateItems();
-document.getElementById('body-button').click();
-document.getElementById('overall-button').click();
+
+$(document).ready(function(){
+
+	$('.type-menu').tabs({active:0});
+	$('.category-menu').tabs({active:0});
+	$('.item-menu').selectable({
+		// selecting: function(event, ui){
+  //           if( $(".ui-selected, .ui-selecting").length > 1){
+  //         		$("ui.selecting").removeClass("ui-selecting");
+  //           }
+  //     	}
+	});
+	populateItems();
+});

@@ -87,11 +87,7 @@ function populateItems(){
 						let newButton = document.createElement('LI');
 						newButton.className += "item-button";
 						newButton.innerHTML = itemName;
-						newButton.addEventListener('click', function(){
-							selectItem(event, category, itemName)
-						});
 						categoryElement.appendChild(newButton);
-						console.log(newButton);
 					}
 				}
 			}
@@ -101,7 +97,6 @@ function populateItems(){
 		for (let i=0; i < itemMenus.length; i++) {
 			if (itemMenus[i].children.length > 0) {
 				itemMenus[i].children[0].classList.add('ui-selected');
-				itemMenus[i].children[0].click();
 			}	
 		}
     } 
@@ -110,45 +105,21 @@ function populateItems(){
     }
 }
 
-function selectType(event, typeName){
-	// Open tab
-	var types = document.getElementsByClassName("type");
-	for (var i=0; i < types.length; i++)
-	{
-		if (!types[i].className.includes(" hidden"))
-		{
-			types[i].className += " hidden";
-		}
-	}
-	selectedType = document.getElementById(typeName);
-	selectedType.className = selectedType.className.replace(" hidden", "");
-}
-
-function selectCategory(evt, categoryName){
-	// Open tab
-	var categories = document.getElementsByClassName("category");
-	for (var i=0; i < categories.length; i++)
-	{
-		if (!categories[i].className.includes(" hidden"))
-		{
-			categories[i].className += " hidden";
-		}
-	}
-	selectedCategory = document.getElementById(categoryName);
-	selectedCategory.className = selectedCategory.className.replace(" hidden", ""); 
-}
-
-
 $(document).ready(function(){
 
 	$('.type-menu').tabs({active:0});
 	$('.category-menu').tabs({active:0});
 	$('.item-menu').selectable({
-		// selecting: function(event, ui){
-  //           if( $(".ui-selected, .ui-selecting").length > 1){
-  //         		$("ui.selecting").removeClass("ui-selecting");
-  //           }
-  //     	}
+		selecting: function(event, ui){
+            if( $(".ui-selected, .ui-selecting").length > 1){
+          		$("ui.selecting").removeClass("ui-selecting");
+            }
+      	},
+      	selected: function(event, ui){
+      		let categoryName = ui.selected.parentNode.id;
+      		let itemName = ui.selected.innerText;
+			selectItem(event, categoryName, itemName)
+		}
 	});
 	populateItems();
 });

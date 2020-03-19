@@ -62,6 +62,7 @@ function selectItem(categoryName, selectedItemName){
 
                     if (itemName == selectedItemName) {
                         selectedObj.material.visible = true;
+                        character.selectedItems[categoryName] = itemName;
                     }
                     else {
                         selectedObj.material.visible = false;
@@ -72,43 +73,112 @@ function selectItem(categoryName, selectedItemName){
     }
 }
 
+function colorItem(color, itemName){
+    
+    character.colorItem(color, itemName);
+}
+
 function populateItems(){
 
-    if(isCharLoaded) {
-        for (let type in character.data) {
-            for (let category in character.data[type]) {
+    for (let type in character.data) {
+        for (let category in character.data[type]) {
+            let categoryElement = document.getElementById(category);
+            if (categoryElement){
+                
+                let itemDiv = document.createElement('DIV');
+                $(itemDiv).addClass('item-div');
+                categoryElement.appendChild(itemDiv);
+
                 for (let item in character.data[type][category]) {
+                    
+                    let itemName = character.data[type][category][item];
 
-                    let categoryElement = document.getElementById(category);
-                    if (categoryElement)
-                    {
-                        let itemName = character.data[type][category][item];
-
-                        let newButton = document.createElement('LI');
-                        newButton.className += "item-button";
-                        newButton.innerHTML = itemName;
-                        categoryElement.appendChild(newButton);
-                    }
+                    let newButton = document.createElement('LI');
+                    newButton.className += "item-button";
+                    newButton.innerHTML = itemName;
+                    itemDiv.appendChild(newButton);
                 }
+
+                $(itemDiv).selectable({
+                    selected: function(event, ui){
+                        let categoryName = ui.selected.parentNode.parentNode.id;
+                        let itemName = ui.selected.innerText;
+                        selectItem(categoryName, itemName);
+
+                        // Deselect all other items in category
+                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
+                    }
+                });
             }
         }
-        // Select first item in every category by default
-        let itemMenus = document.getElementsByClassName('item-menu');
-        for (let i=0; i < itemMenus.length; i++) {
-            if (itemMenus[i].children.length > 0) {
-                
-                // Make UI display selection
-                itemMenus[i].children[0].classList.add('ui-selected');
+    }
+    // Select first item in every category by default
+    let itemMenus = document.getElementsByClassName('item-div');
+    for (let i=0; i < itemMenus.length; i++) {
+        if (itemMenus[i].children.length > 0) {
+            
+            // Make UI display selection
+            itemMenus[i].children[0].classList.add('ui-selected');
 
-                // Also programmatically select element                
-                let categoryName = itemMenus[i].id; 
-                let itemName = itemMenus[i].children[0].innerText;
-                selectItem(categoryName, itemName);
-            }   
-        }
+            // Also programmatically select element                
+            let categoryName = itemMenus[i].parentNode.id; 
+            let itemName = itemMenus[i].children[0].innerText;
+            selectItem(categoryName, itemName);
+        }   
     } 
+}
+
+function populateColors(){
+    for (let type in character.data) {
+        for (let category in character.data[type]) {
+            let categoryElement = document.getElementById(category);
+            if (categoryElement)
+            {
+                let colorDiv = document.createElement('DIV');
+                $(colorDiv).addClass('color-div');
+                categoryElement.appendChild(colorDiv);
+
+                // let colors = character.getCategoryColors(category);
+                let colors = [0xff0000, 0x00ff00, 0x0000ff];
+                for (let i=0; i < colors.length; i++) {
+                    let newButton = document.createElement('LI');
+                    $(newButton).addClass('color-button');
+                    newButton.style.backgroundColor = getHexColorAsString(colors[i]);
+                    colorDiv.appendChild(newButton);
+                }
+
+                $(colorDiv).selectable({
+                    selected: function(event, ui){
+                        let color = ui.selected.style.backgroundColor;
+                        let itemName = character.selectedItems[ui.selected.parentNode.parentNode.id];
+
+                        colorItem(color, itemName);
+
+                        // Deselect all other colors in category
+                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
+                    }
+                });
+            }
+        }
+    }
+}
+
+function getHexColorAsString(hexColor){
+
+    strColor = hexColor.toString(16);
+    while (strColor.length < 6) {
+        strColor = '0' + strColor;
+    }
+    return '#' + strColor;
+}
+
+function init(){
+    if (isCharLoaded) {
+        populateItems();
+        populateColors();
+    }
     else {
-       window.setTimeout(populateItems, 1000);
+       window.setTimeout(init, 1000);
     }
 }
 
@@ -119,15 +189,5 @@ $(document).ready(function(){
 
     $('.category-menu').tabs({active:0});
     
-    $('.item-menu').selectable({
-        selected: function(event, ui){
-            let categoryName = ui.selected.parentNode.id;
-            let itemName = ui.selected.innerText;
-            selectItem(categoryName, itemName);
-
-            // Deselect all other items in category
-            $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
-        }
-    });
-    populateItems();
+    init();
 });

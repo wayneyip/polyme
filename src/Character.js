@@ -7,6 +7,7 @@ class Character extends THREE.Group {
         this.name = 'character_GRP';
         this.data = {
             'body' : {
+                'overall' : [],
                 'face' : [],
                 'hair' : [],
                 'eyes' : [],
@@ -21,6 +22,19 @@ class Character extends THREE.Group {
                 'shoes' : []
             }
         };
+        this.selectedItems = {
+            'overall' : 0,
+            'face' : 0,
+            'hair' : 0,
+            'eyes' : 0,
+            'brows' : 0,
+            'nose' : 0,
+            'mouth' : 0,
+            'ears' : 0,
+            'top' : 0,
+            'bottom' : 0,
+            'shoes' : 0
+        }
 
         // Loader
         var gltfLoader = new THREE.GLTFLoader(manager);
@@ -95,5 +109,15 @@ class Character extends THREE.Group {
             return 'clothes';
          }
          return "";
+    }
+
+    colorItem(color, itemName){
+        let item;
+        this.traverse(function(child) {
+            if (child.name == itemName) {
+                item = child;
+            }
+        });
+        item.material.color = new THREE.Color(color);
     }
 }

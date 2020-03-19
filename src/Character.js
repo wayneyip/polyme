@@ -23,8 +23,8 @@ class Character extends THREE.Group {
             }
         };
         this.selectedItems = {
-            'overall' : 0,
-            'face' : 0,
+            'overall' : 'body_MSH',
+            'face' : 'body_MSH',
             'hair' : 0,
             'eyes' : 0,
             'brows' : 0,
@@ -34,7 +34,20 @@ class Character extends THREE.Group {
             'top' : 0,
             'bottom' : 0,
             'shoes' : 0
-        }
+        };
+        this.categoryColors = {
+            'overall' : [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30],
+            'face' : [],
+            'hair' : [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99],
+            'eyes' : [],
+            'brows' : [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99],
+            'nose' : [],
+            'mouth' : [],
+            'ears' : [],
+            'top' : [0xeae2dc, 0x645f3f, 0x20419a, 0xef4848, 0xf34976, 0x8063d5, 0x0ca2bd],
+            'bottom' : [0x654321, 0x1560bd, 0x333333, 0xe1e1e1],
+            'shoes' : [0x3d3d3d, 0xeae2dc, 0x60371f]
+        };
 
         // Loader
         var gltfLoader = new THREE.GLTFLoader(manager);

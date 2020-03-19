@@ -31,25 +31,6 @@ window.addEventListener('keydown', function(e){
     }
 })
 
-window.addEventListener('keypress', function(e){
-
-    if (e.code == 'KeyQ')
-    {
-        var body = scene.getObjectByName("body_MSH");
-        body.material.color = new THREE.Color(0xe4b98e);
-    }
-    if (e.code == 'KeyW')
-    {
-        var body = scene.getObjectByName("body_MSH");
-        body.material.color = new THREE.Color(0xd99164);
-    }
-    if (e.code == 'KeyE')
-    {
-        var body = scene.getObjectByName("body_MSH");
-        body.material.color = new THREE.Color(0xbb6d4a);
-    }
-})
-
 function selectItem(categoryName, selectedItemName){
 
     for (let type in character.data) {
@@ -138,8 +119,7 @@ function populateColors(){
                 $(colorDiv).addClass('color-div');
                 categoryElement.appendChild(colorDiv);
 
-                // let colors = character.getCategoryColors(category);
-                let colors = [0xff0000, 0x00ff00, 0x0000ff];
+                let colors = character.categoryColors[category];
                 for (let i=0; i < colors.length; i++) {
                     let newButton = document.createElement('LI');
                     $(newButton).addClass('color-button');
@@ -161,6 +141,20 @@ function populateColors(){
             }
         }
     }
+    // Select first color in every category by default
+    let colorMenus = document.getElementsByClassName('color-div');
+    for (let i=0; i < colorMenus.length; i++) {
+        if (colorMenus[i].children.length > 0) {
+            
+            // Make UI display selection
+            colorMenus[i].children[0].classList.add('ui-selected');
+
+            // Also programmatically select element                
+            let color = colorMenus[i].children[0].style.backgroundColor; 
+            let itemName = character.selectedItems[colorMenus[i].parentNode.id];
+            colorItem(color, itemName);
+        }   
+    } 
 }
 
 function getHexColorAsString(hexColor){

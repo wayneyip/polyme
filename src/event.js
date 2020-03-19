@@ -114,8 +114,11 @@ function populateItems(){
 
 $(document).ready(function(){
 
-    $('.type-menu').tabs({active:0});
+    $('.type-menu').tabs({active:0}).addClass('ui-tabs-vertical');
+    $( ".type-menu li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+
     $('.category-menu').tabs({active:0});
+    
     $('.item-menu').selectable({
         selected: function(event, ui){
             let categoryName = ui.selected.parentNode.id;

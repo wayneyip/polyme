@@ -52,10 +52,14 @@ function selectItem(categoryName, selectedItemName){
             }
         }
     }
+    // Color the selected item accordingly
+    let color = character.selectedColors[categoryName]; 
+    selectColor(color, categoryName, selectedItemName);
 }
 
-function colorItem(color, itemName){
+function selectColor(color, categoryName, itemName){
     
+    character.selectedColors[categoryName] = color;
     character.colorItem(color, itemName);
 }
 
@@ -130,9 +134,10 @@ function populateColors(){
                 $(colorDiv).selectable({
                     selected: function(event, ui){
                         let color = ui.selected.style.backgroundColor;
-                        let itemName = character.selectedItems[ui.selected.parentNode.parentNode.id];
+                        let categoryName = ui.selected.parentNode.parentNode.id;
+                        let itemName = character.selectedItems[categoryName];
 
-                        colorItem(color, itemName);
+                        selectColor(color, categoryName, itemName);
 
                         // Deselect all other colors in category
                         $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
@@ -151,8 +156,9 @@ function populateColors(){
 
             // Also programmatically select element                
             let color = colorMenus[i].children[0].style.backgroundColor; 
-            let itemName = character.selectedItems[colorMenus[i].parentNode.id];
-            colorItem(color, itemName);
+            let categoryName = colorMenus[i].parentNode.id;
+            let itemName = character.selectedItems[categoryName];
+            selectColor(color, categoryName, itemName);
         }   
     } 
 }

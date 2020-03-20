@@ -35,6 +35,20 @@ class Character extends THREE.Group {
             'bottom' : 0,
             'shoes' : 0
         };
+        this.selectedColors = {
+            'overall' : 0,
+            'face' : 0,
+            'hair' : 0,
+            'eyes' : 0,
+            'brows' : 0,
+            'nose' : 0,
+            'mouth' : 0,
+            'ears' : 0,
+            'top' : 0,
+            'bottom' : 0,
+            'shoes' : 0
+        }
+
         this.categoryColors = {
             'overall' : [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30],
             'face' : [],

@@ -45,7 +45,7 @@ class Character extends THREE.Group {
             'mouth' : [],
             'ears' : [],
             'top' : [0xeae2dc, 0x645f3f, 0x20419a, 0xef4848, 0xf34976, 0x8063d5, 0x0ca2bd],
-            'bottom' : [0x654321, 0x1560bd, 0x333333, 0xe1e1e1],
+            'bottom' : [0x1560bd, 0x654321, 0x333333, 0xe1e1e1],
             'shoes' : [0x3d3d3d, 0xeae2dc, 0x60371f]
         };
 
@@ -62,14 +62,18 @@ class Character extends THREE.Group {
                     map:        texLoader.load('assets/eye.png'),
                     specular:   0xffffff,
                     shininess:  50,
-                    skinning:   true
+                    skinning:   true,
+                    visible:    false
                 } 
             );
             LF_eye_obj.material = eyeMaterial;
             RT_eye_obj.material = eyeMaterial;
 
             var body_obj = file.scene.getObjectByName('body_MSH');
-            var bodyMaterial = new THREE.MeshPhongMaterial({skinning: true});
+            var bodyMaterial = new THREE.MeshPhongMaterial({
+                skinning: true,
+                visible: false
+            });
             body_obj.material = bodyMaterial;
             body_obj.castShadow = true;
 
@@ -88,8 +92,8 @@ class Character extends THREE.Group {
                         this.data[type][category].push(itemName);
                         sceneObject.children[i].material = new THREE.MeshPhongMaterial({
                             skinning: true,
-                            color: 0x444444,
-                            side: THREE.DoubleSide
+                            side: THREE.DoubleSide,
+                            visible: false
                         });
                         sceneObject.children[i].castShadow = true;
                     }
@@ -132,5 +136,23 @@ class Character extends THREE.Group {
             }
         });
         item.material.color = new THREE.Color(color);
+    }
+
+    showCharacter(){
+        let body, LF_eye, RT_eye;
+        this.traverse(function(child) {
+            if (child.name == 'body_MSH') {
+                body = child;
+            }
+            else if (child.name == 'LF_eye_MSH') {
+                LF_eye = child;
+            }
+            else if (child.name == 'RT_eye_MSH') {
+                RT_eye = child;
+            }
+        });
+        body.material.visible = true;
+        LF_eye.material.visible = true;
+        RT_eye.material.visible = true;
     }
 }

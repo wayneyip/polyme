@@ -3,7 +3,7 @@
 	top: 8%;
 	right: 5%;
 	width: 700px;
-	min-height: 600px;
+	min-height: 500px;
 }
 
 .ui-tabs-vertical > .ui-tabs-nav { 
@@ -36,7 +36,7 @@
   text-align: right; 
 } 
 .ui-tabs-vertical > .ui-tabs-panel { 
-  height: 600px;
+  height: 500px;
   margin-left: 6em;
   position: relative;
 }

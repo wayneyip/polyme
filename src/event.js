@@ -1,20 +1,20 @@
-window.addEventListener('mousemove', function(e){
+// window.addEventListener('mousemove', function(e){
  
-    var mouse3D_head = new THREE.Vector3(
-        ( event.clientX / window.innerWidth ) * 200 - 100,
-        100 - ( event.clientY / window.innerHeight ) * 200,
-        100
-    );
+//     var mouse3D_head = new THREE.Vector3(
+//         ( event.clientX / window.innerWidth ) * 200 - 100,
+//         100 - ( event.clientY / window.innerHeight ) * 200,
+//         100
+//     );
 
-    var head = scene.getObjectByName("neck_JNT");
-    head.lookAt(mouse3D_head);
-    head.rotateZ(1.57);
+//     var head = scene.getObjectByName("neck_JNT");
+//     head.lookAt(mouse3D_head);
+//     head.rotateZ(1.57);
 
-    var leg = scene.getObjectByName("LF_thigh_JNT");
-    leg.lookAt(mouse3D_head);
-    leg.rotateZ(-1.57);
-    leg.rotateX(-1.57);
-})
+//     var leg = scene.getObjectByName("LF_thigh_JNT");
+//     leg.lookAt(mouse3D_head);
+//     leg.rotateZ(-1.57);
+//     leg.rotateX(-1.57);
+// })
 
 window.addEventListener('keydown', function(e){
 
@@ -170,6 +170,7 @@ function init(){
     if (isCharLoaded) {
         populateItems();
         populateColors();
+        character.showCharacter();
     }
     else {
        window.setTimeout(init, 1000);

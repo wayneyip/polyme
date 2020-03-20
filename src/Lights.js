@@ -14,7 +14,7 @@ class Lights extends THREE.Group {
     dir.target.position.set(-20, -50, -100);
 
     dir.castShadow = true;
-    var d = 50;
+    const d = 50;
     dir.shadow.camera.near = 1;
     dir.shadow.camera.far = 300;
     dir.shadow.camera.left = -d;

@@ -1,16 +1,16 @@
 // window.addEventListener('mousemove', function(e){
  
-//     var mouse3D_head = new THREE.Vector3(
+//     let mouse3D_head = new THREE.Vector3(
 //         ( event.clientX / window.innerWidth ) * 200 - 100,
 //         100 - ( event.clientY / window.innerHeight ) * 200,
 //         100
 //     );
 
-//     var head = scene.getObjectByName("neck_JNT");
+//     let head = scene.getObjectByName("neck_JNT");
 //     head.lookAt(mouse3D_head);
 //     head.rotateZ(1.57);
 
-//     var leg = scene.getObjectByName("LF_thigh_JNT");
+//     let leg = scene.getObjectByName("LF_thigh_JNT");
 //     leg.lookAt(mouse3D_head);
 //     leg.rotateZ(-1.57);
 //     leg.rotateX(-1.57);
@@ -20,38 +20,21 @@ window.addEventListener('keydown', function(e){
 
     if (e.code == 'KeyA')
     {
-        var body = scene.getObjectByName("pelvis_JNT");
+        let body = scene.getObjectByName("pelvis_JNT");
         body.rotateX(-0.05);
     }
 
     if (e.code == 'KeyD')
     {
-        var body = scene.getObjectByName("pelvis_JNT");
+        let body = scene.getObjectByName("pelvis_JNT");
         body.rotateX(0.05);
     }
 })
 
 function selectItem(categoryName, selectedItemName){
 
-    for (let type in character.data) {
-        for (let category in character.data[type]) {
-            if (category == categoryName) {
-                for (let item in character.data[type][category]) {
-
-                    let itemName = character.data[type][category][item];
-                    let selectedObj = character.getObjectByName(itemName);
-
-                    if (itemName == selectedItemName) {
-                        selectedObj.material.visible = true;
-                        character.selectedItems[categoryName] = itemName;
-                    }
-                    else {
-                        selectedObj.material.visible = false;
-                    }
-                }
-            }
-        }
-    }
+    character.selectItem(categoryName, selectedItemName);
+    
     // Color the selected item accordingly
     let color = character.selectedColors[categoryName]; 
     selectColor(color, categoryName, selectedItemName);
@@ -123,7 +106,10 @@ function populateColors(){
                 $(colorDiv).addClass('color-div');
                 categoryElement.appendChild(colorDiv);
 
+                // Get list of colors for this category
                 let colors = character.categoryColors[category];
+                
+                // Create color button
                 for (let i=0; i < colors.length; i++) {
                     let newButton = document.createElement('LI');
                     $(newButton).addClass('color-button');

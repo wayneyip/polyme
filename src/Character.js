@@ -22,6 +22,7 @@ class Character extends THREE.Group {
                 'shoes' : []
             }
         };
+        
         this.selectedItems = {
             'overall' : 'body_MSH',
             'face' : 'body_MSH',
@@ -35,6 +36,7 @@ class Character extends THREE.Group {
             'bottom' : 0,
             'shoes' : 0
         };
+
         this.selectedColors = {
             'overall' : 0,
             'face' : 0,
@@ -47,7 +49,7 @@ class Character extends THREE.Group {
             'top' : 0,
             'bottom' : 0,
             'shoes' : 0
-        }
+        };
 
         this.categoryColors = {
             'overall' : [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30],
@@ -64,14 +66,14 @@ class Character extends THREE.Group {
         };
 
         // Loader
-        var gltfLoader = new THREE.GLTFLoader(manager);
-        var texLoader = new THREE.TextureLoader();
+        let gltfLoader = new THREE.GLTFLoader(manager);
+        let texLoader = new THREE.TextureLoader();
         gltfLoader.load('assets/character.gltf', (file)=>{
 
-            var LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
-            var RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
+            let LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
+            let RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
 
-            var eyeMaterial = new THREE.MeshPhongMaterial( 
+            let eyeMaterial = new THREE.MeshPhongMaterial( 
                 {
                     map:        texLoader.load('assets/eye.png'),
                     specular:   0xffffff,
@@ -83,26 +85,26 @@ class Character extends THREE.Group {
             LF_eye_obj.material = eyeMaterial;
             RT_eye_obj.material = eyeMaterial;
 
-            var body_obj = file.scene.getObjectByName('body_MSH');
-            var bodyMaterial = new THREE.MeshPhongMaterial({
+            let body_obj = file.scene.getObjectByName('body_MSH');
+            let bodyMaterial = new THREE.MeshPhongMaterial({
                 skinning: true,
                 visible: false
             });
             body_obj.material = bodyMaterial;
             body_obj.castShadow = true;
 
-            var sceneObjects = file.scene.children[0].children;
+            let sceneObjects = file.scene.children[0].children;
             while (sceneObjects.length > 0)
             {
-                var sceneObject = sceneObjects[0];
+                let sceneObject = sceneObjects[0];
                 if (sceneObject.name.endsWith('_GRP')) 
                 {
-                    var category = sceneObject.name.substr(0, sceneObject.name.length-4);
-                    var type = this.getTypeFromCategory(category);
+                    let category = sceneObject.name.substr(0, sceneObject.name.length-4);
+                    let type = this.getTypeFromCategory(category);
 
-                    for (var i=0; i < sceneObject.children.length; i++)
+                    for (let i=0; i < sceneObject.children.length; i++)
                     {
-                        var itemName = sceneObject.children[i].name;
+                        let itemName = sceneObject.children[i].name;
                         this.data[type][category].push(itemName);
                         sceneObject.children[i].material = new THREE.MeshPhongMaterial({
                             skinning: true,
@@ -114,8 +116,8 @@ class Character extends THREE.Group {
                 }
                 this.add(sceneObject);
             }
-            // var rig = file.scene.getObjectByName('root_JNT');
-            // var helper = new THREE.SkeletonHelper(rig.children[0]);
+            // let rig = file.scene.getObjectByName('root_JNT');
+            // let helper = new THREE.SkeletonHelper(rig.children[0]);
             // this.add(helper);
         });
     }
@@ -140,6 +142,29 @@ class Character extends THREE.Group {
             return 'clothes';
          }
          return "";
+    }
+
+    selectItem(categoryName, selectedItemName){
+    
+        for (let type in this.data) {
+            for (let category in this.data[type]) {
+                if (category == categoryName) {
+                    for (let item in this.data[type][category]) {
+
+                        let itemName = this.data[type][category][item];
+                        let selectedObj = this.getObjectByName(itemName);
+
+                        if (itemName == selectedItemName) {
+                            selectedObj.material.visible = true;
+                            this.selectedItems[categoryName] = itemName;
+                        }
+                        else {
+                            selectedObj.material.visible = false;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     colorItem(color, itemName){

@@ -68,7 +68,11 @@ class Character extends THREE.Group {
         // Loader
         let gltfLoader = new THREE.GLTFLoader(manager);
         let texLoader = new THREE.TextureLoader();
-        gltfLoader.load('assets/character.gltf', (file)=>{
+        gltfLoader.load('assets/character.glb', (file)=>{
+
+            let rig = file.scene.getObjectByName('root_JNT');
+            let helper = new THREE.SkeletonHelper(rig.children[0]);
+            this.add(helper);
 
             let LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
             let RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
@@ -88,10 +92,12 @@ class Character extends THREE.Group {
             let body_obj = file.scene.getObjectByName('body_MSH');
             let bodyMaterial = new THREE.MeshPhongMaterial({
                 skinning: true,
+                morphTargets: true,
                 visible: false
             });
             body_obj.material = bodyMaterial;
             body_obj.castShadow = true;
+            console.log(body_obj);
 
             let sceneObjects = file.scene.children[0].children;
             while (sceneObjects.length > 0)
@@ -106,6 +112,8 @@ class Character extends THREE.Group {
                     {
                         let itemName = sceneObject.children[i].name;
                         this.data[type][category].push(itemName);
+
+                        // Assign threejs material
                         sceneObject.children[i].material = new THREE.MeshPhongMaterial({
                             skinning: true,
                             side: THREE.DoubleSide,
@@ -114,11 +122,9 @@ class Character extends THREE.Group {
                         sceneObject.children[i].castShadow = true;
                     }
                 }
+                sceneObject.scale.set(100,100,100); // fbx2gltf exporter peculiarity
                 this.add(sceneObject);
             }
-            // let rig = file.scene.getObjectByName('root_JNT');
-            // let helper = new THREE.SkeletonHelper(rig.children[0]);
-            // this.add(helper);
         });
     }
 

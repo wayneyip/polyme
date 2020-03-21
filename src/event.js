@@ -30,6 +30,15 @@ window.addEventListener('keydown', function(e){
         body.rotateX(0.05);
     }
 })
+window.addEventListener('keypress', function(e){
+
+    if (e.code == 'KeyS')
+    {
+        let body = scene.getObjectByName("body_MSH");
+        body.morphTargetInfluences[0] = 1;
+        console.log(body.geometry);
+    }
+})
 
 function selectItem(categoryName, selectedItemName){
 

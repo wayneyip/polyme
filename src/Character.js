@@ -65,14 +65,16 @@ class Character extends THREE.Group {
             'shoes' : [0x3d3d3d, 0xeae2dc, 0x60371f]
         };
 
+        this.morphTargetLookup = {};
+
         // Loader
         let gltfLoader = new THREE.GLTFLoader(manager);
         let texLoader = new THREE.TextureLoader();
         gltfLoader.load('assets/character.glb', (file)=>{
 
-            let rig = file.scene.getObjectByName('root_JNT');
-            let helper = new THREE.SkeletonHelper(rig.children[0]);
-            this.add(helper);
+            // let rig = file.scene.getObjectByName('root_JNT');
+            // let helper = new THREE.SkeletonHelper(rig.children[0]);
+            // this.add(helper);
 
             let LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
             let RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
@@ -88,7 +90,6 @@ class Character extends THREE.Group {
             );
             LF_eye_obj.material = eyeMaterial;
             RT_eye_obj.material = eyeMaterial;
-
             let body_obj = file.scene.getObjectByName('body_MSH');
             let bodyMaterial = new THREE.MeshPhongMaterial({
                 skinning: true,
@@ -97,8 +98,28 @@ class Character extends THREE.Group {
             });
             body_obj.material = bodyMaterial;
             body_obj.castShadow = true;
-            console.log(body_obj);
 
+            // Fill this character's data JSON with morphTarget data
+            let bodyProperties = body_obj.userData.fromFBX.userProperties;
+            let propertyList = Object.entries(bodyProperties);
+            for (let i=0; i < propertyList.length; i++)
+            {
+                let property = propertyList[i];
+                if (property[0].startsWith('target'))
+                {
+                    let morphTargetName = property[1].value;
+                    let category = morphTargetName.split('_')[0];
+                    let type = this.getTypeFromCategory(category);
+
+                    this.data[type][category].push(morphTargetName);
+
+                    // Also map the morph target's name to its index
+                    let morphTargetIndex = property[0].split('_')[1];
+                    this.morphTargetLookup[morphTargetName] = morphTargetIndex;
+                }
+            }
+
+            // Fill this character's data JSON with mesh data
             let sceneObjects = file.scene.children[0].children;
             while (sceneObjects.length > 0)
             {
@@ -161,11 +182,26 @@ class Character extends THREE.Group {
                         let selectedObj = this.getObjectByName(itemName);
 
                         if (itemName == selectedItemName) {
-                            selectedObj.material.visible = true;
                             this.selectedItems[categoryName] = itemName;
+                            
+                            if (itemName.endsWith('_BLN')) {
+                                let index = this.morphTargetLookup[itemName];
+                                let body = scene.getObjectByName('body_MSH');
+                                body.morphTargetInfluences[index] = 1;
+                            }
+                            else if (itemName.endsWith('_MSH')) {
+                                selectedObj.material.visible = true;
+                            }
                         }
                         else {
-                            selectedObj.material.visible = false;
+                            if (itemName.endsWith('_BLN')) {
+                                let index = this.morphTargetLookup[itemName];
+                                let body = scene.getObjectByName('body_MSH');
+                                body.morphTargetInfluences[index] = 0;
+                            }
+                            else if (itemName.endsWith('_MSH')) {
+                                selectedObj.material.visible = false;
+                            }
                         }
                     }
                 }

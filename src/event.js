@@ -35,8 +35,7 @@ window.addEventListener('keypress', function(e){
     if (e.code == 'KeyS')
     {
         let body = scene.getObjectByName("body_MSH");
-        body.morphTargetInfluences[0] = 1;
-        console.log(body.geometry);
+        body.morphTargetInfluences[2] = 1;
     }
 })
 
@@ -46,7 +45,9 @@ function selectItem(categoryName, selectedItemName){
     
     // Color the selected item accordingly
     let color = character.selectedColors[categoryName]; 
-    selectColor(color, categoryName, selectedItemName);
+    if (color != 0) {
+        selectColor(color, categoryName, selectedItemName);
+    }
 }
 
 function selectColor(color, categoryName, itemName){

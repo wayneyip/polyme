@@ -1,5 +1,7 @@
-class Environment extends THREE.Group {
-  constructor(...args) {
+class Environment extends THREE.Group 
+{
+  constructor(...args) 
+  {
     super(...args);
 
 	const floorGeo = new THREE.PlaneGeometry(10000, 10000);

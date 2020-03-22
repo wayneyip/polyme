@@ -39,8 +39,8 @@ window.addEventListener('keypress', function(e){
     }
 })
 
-function selectItem(category, itemIndex){
-
+function selectItem(category, itemIndex)
+{
     character.selectItem(category, itemIndex);
     
     // Color the selected item accordingly
@@ -48,19 +48,20 @@ function selectItem(category, itemIndex){
     character.colorItem(colorIndex, category, itemIndex);
 }
 
-function selectColor(colorIndex, category, itemIndex){
-    
+function selectColor(colorIndex, category, itemIndex)
+{
     character.colorItem(colorIndex, category, itemIndex);
 }
 
-function populateItems(){
-
+function populateItems()
+{
     let categories = Object.keys(character.data);
-    for (let i in categories) {
+    for (let i in categories) 
+    {
         let category = categories[i];
         let categoryElement = document.getElementById(category);
-        if (categoryElement) {
-
+        if (categoryElement) 
+        {
             // Create div to hold item buttons
             let itemDiv = document.createElement('DIV');
             $(itemDiv).addClass('item-div');
@@ -68,7 +69,8 @@ function populateItems(){
 
             // Create button for each item
             let categoryItems = character.data[category].items;
-            for (let i in categoryItems) {
+            for (let i in categoryItems) 
+            {
                 let newButton = document.createElement('LI');
                 newButton.className += "item-button";
                 newButton.innerHTML = categoryItems[i];
@@ -77,7 +79,8 @@ function populateItems(){
 
             // Add item selection callback function
             $(itemDiv).selectable({
-                selected: function(event, ui){
+                selected: function(event, ui)
+                {
                     let itemIndex = Array.from(ui.selected.parentNode.childNodes).indexOf(ui.selected);
                     selectItem(category, itemIndex);
 
@@ -88,7 +91,8 @@ function populateItems(){
 
             // Select first item in each category by default
             let itemMenu = categoryElement.children[0];
-            if (itemMenu.children[0]) {
+            if (itemMenu.children[0]) 
+            {
                 itemMenu.children[0].classList.add('ui-selected');
                 selectItem(category, 0); 
             }
@@ -96,14 +100,16 @@ function populateItems(){
     }
 }
 
-function populateColors(){
+function populateColors()
+{
     
     let categories = Object.keys(character.data);
-    for (let i in categories) {
+    for (let i in categories) 
+    {
         let category = categories[i];
         let categoryElement = document.getElementById(category);
-        if (categoryElement) {
-
+        if (categoryElement) 
+        {
             // Create div to hold color buttons
             let colorDiv = document.createElement('DIV');
             $(colorDiv).addClass('color-div');
@@ -111,7 +117,8 @@ function populateColors(){
 
             // Create button for each color
             let categoryColors = character.data[category].colors;
-            for (let i in categoryColors) {
+            for (let i in categoryColors) 
+            {
                 let newButton = document.createElement('LI');
                 $(newButton).addClass('color-button');
                 newButton.style.backgroundColor = getHexColorAsString(categoryColors[i]);
@@ -120,7 +127,8 @@ function populateColors(){
 
             // Add color selection callback function
             $(colorDiv).selectable({
-                selected: function(event, ui){
+                selected: function(event, ui)
+                {
                     let colorIndex = Array.from(ui.selected.parentNode.childNodes).indexOf(ui.selected);
                     let itemIndex = character.data[category].selectedItemIndex;
 
@@ -133,7 +141,8 @@ function populateColors(){
 
             // Select first color in each category by default
             let colorMenu = categoryElement.children[1];
-            if (colorMenu.children[0]) {
+            if (colorMenu.children[0]) 
+            {
                 colorMenu.children[0].classList.add('ui-selected');
                 let itemIndex = character.data[category].selectedItemIndex;
                 selectColor(0, category, itemIndex);
@@ -142,8 +151,8 @@ function populateColors(){
     }
 }
 
-function getHexColorAsString(hexColor){
-
+function getHexColorAsString(hexColor)
+{
     strColor = hexColor.toString(16);
     while (strColor.length < 6) {
         strColor = '0' + strColor;
@@ -151,13 +160,16 @@ function getHexColorAsString(hexColor){
     return '#' + strColor;
 }
 
-function init(){
-    if (isCharLoaded) {
+function init()
+{
+    if (isCharLoaded) 
+    {
         populateItems();
         populateColors();
         character.showCharacter();
     }
-    else {
+    else 
+    {
        window.setTimeout(init, 1000);
     }
 }

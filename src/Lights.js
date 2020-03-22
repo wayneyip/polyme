@@ -1,5 +1,7 @@
-class Lights extends THREE.Group {
-  constructor(...args) {
+class Lights extends THREE.Group 
+{
+  constructor(...args) 
+  {
     super(...args);
 
     const dir = new THREE.DirectionalLight(0xFFFFFF, 0.1);

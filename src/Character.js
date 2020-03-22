@@ -1,70 +1,38 @@
+class Category {
+
+    constructor(name, typeName, colors) {
+        
+        this.name = name;
+        this.typeName = typeName;       
+        
+        this.items = [];
+        this.selectedItemIndex = 0;
+
+        this.colors = colors;
+        this.selectedColorIndex = 0;
+    }
+}
+
+
 class Character extends THREE.Group {
 
     constructor(manager) {
     
         // Initial setup
         super();
-        this.name = 'character_GRP';
         this.data = {
-            'body' : {
-                'overall' : [],
-                'face' : [],
-                'hair' : [],
-                'eyes' : [],
-                'brows' : [],
-                'nose' : [],
-                'mouth' : [],
-                'ears' : []
-            },
-            'clothes' : {
-                'top' : [],
-                'bottom' : [],
-                'shoes' : []
-            }
+            'overall':  new Category('overall', 'body',     [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30]),
+            'face':     new Category('face',    'body',     []),
+            'hair':     new Category('hair',    'body',     [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99]),
+            'eyes':     new Category('eyes',    'body',     []),
+            'brows':    new Category('brows',   'body',     [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99]),
+            'nose':     new Category('nose',    'body',     []),
+            'mouth':    new Category('mouth',   'body',     []),
+            'ears':     new Category('ears',    'body',     []),
+            'top':      new Category('top',     'clothes',  [0xeae2dc, 0x645f3f, 0x20419a, 0xef4848, 0xf34976, 0x8063d5, 0x0ca2bd]),
+            'bottom':   new Category('bottom',  'clothes',  [0x1560bd, 0x654321, 0x333333, 0xe1e1e1]),
+            'shoes':    new Category('shoes',   'clothes',  [0x3d3d3d, 0xeae2dc, 0x60371f]),
         };
-        
-        this.selectedItems = {
-            'overall' : 'body_MSH',
-            'face' : 'body_MSH',
-            'hair' : 0,
-            'eyes' : 0,
-            'brows' : 0,
-            'nose' : 0,
-            'mouth' : 0,
-            'ears' : 0,
-            'top' : 0,
-            'bottom' : 0,
-            'shoes' : 0
-        };
-
-        this.selectedColors = {
-            'overall' : 0,
-            'face' : 0,
-            'hair' : 0,
-            'eyes' : 0,
-            'brows' : 0,
-            'nose' : 0,
-            'mouth' : 0,
-            'ears' : 0,
-            'top' : 0,
-            'bottom' : 0,
-            'shoes' : 0
-        };
-
-        this.categoryColors = {
-            'overall' : [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30],
-            'face' : [],
-            'hair' : [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99],
-            'eyes' : [],
-            'brows' : [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99],
-            'nose' : [],
-            'mouth' : [],
-            'ears' : [],
-            'top' : [0xeae2dc, 0x645f3f, 0x20419a, 0xef4848, 0xf34976, 0x8063d5, 0x0ca2bd],
-            'bottom' : [0x1560bd, 0x654321, 0x333333, 0xe1e1e1],
-            'shoes' : [0x3d3d3d, 0xeae2dc, 0x60371f]
-        };
-
         this.morphTargetLookup = {};
 
         // Loader
@@ -72,13 +40,14 @@ class Character extends THREE.Group {
         let texLoader = new THREE.TextureLoader();
         gltfLoader.load('assets/character.glb', (file)=>{
 
+            // Add skeleton helper
             // let rig = file.scene.getObjectByName('root_JNT');
             // let helper = new THREE.SkeletonHelper(rig.children[0]);
             // this.add(helper);
 
+            // Handle eye material
             let LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
             let RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
-
             let eyeMaterial = new THREE.MeshPhongMaterial( 
                 {
                     map:        texLoader.load('assets/eye.png'),
@@ -90,6 +59,8 @@ class Character extends THREE.Group {
             );
             LF_eye_obj.material = eyeMaterial;
             RT_eye_obj.material = eyeMaterial;
+
+            // Handle body/skin material
             let body_obj = file.scene.getObjectByName('body_MSH');
             let bodyMaterial = new THREE.MeshPhongMaterial({
                 skinning: true,
@@ -109,9 +80,8 @@ class Character extends THREE.Group {
                 {
                     let morphTargetName = property[1].value;
                     let category = morphTargetName.split('_')[0];
-                    let type = this.getTypeFromCategory(category);
 
-                    this.data[type][category].push(morphTargetName);
+                    this.data[category].items.push(morphTargetName);
 
                     // Also map the morph target's name to its index
                     let morphTargetIndex = property[0].split('_')[1];
@@ -126,21 +96,20 @@ class Character extends THREE.Group {
                 let sceneObject = sceneObjects[0];
                 if (sceneObject.name.endsWith('_GRP')) 
                 {
-                    let category = sceneObject.name.substr(0, sceneObject.name.length-4);
-                    let type = this.getTypeFromCategory(category);
+                    let category = sceneObject.name.split('_')[0];
 
                     for (let i=0; i < sceneObject.children.length; i++)
                     {
-                        let itemName = sceneObject.children[i].name;
-                        this.data[type][category].push(itemName);
+                        let item = sceneObject.children[i];
+                        this.data[category].items.push(item.name);
 
                         // Assign threejs material
-                        sceneObject.children[i].material = new THREE.MeshPhongMaterial({
+                        item.material = new THREE.MeshPhongMaterial({
                             skinning: true,
                             side: THREE.DoubleSide,
                             visible: false
                         });
-                        sceneObject.children[i].castShadow = true;
+                        item.castShadow = true;
                     }
                 }
                 sceneObject.scale.set(100,100,100); // fbx2gltf exporter peculiarity
@@ -149,74 +118,63 @@ class Character extends THREE.Group {
         });
     }
 
-    getTypeFromCategory(category){
-
-        if (category == 'face' || 
-            category == 'hair' || 
-            category == 'eyes' || 
-            category == 'brows' || 
-            category == 'nose' || 
-            category == 'mouth' || 
-            category == 'ears'
-        ){
-            return 'body';
-        }
-        else if (
-            category == 'top' ||
-            category == 'bottom' ||
-            category == 'shoes'
-         ){
-            return 'clothes';
-         }
-         return "";
-    }
-
-    selectItem(categoryName, selectedItemName){
+    selectItem(category, selectedItemIndex){
     
-        for (let type in this.data) {
-            for (let category in this.data[type]) {
-                if (category == categoryName) {
-                    for (let item in this.data[type][category]) {
+        this.data[category].selectedItemIndex = selectedItemIndex;
 
-                        let itemName = this.data[type][category][item];
-                        let selectedObj = this.getObjectByName(itemName);
+        for (let i in this.data[category].items) {
 
-                        if (itemName == selectedItemName) {
-                            this.selectedItems[categoryName] = itemName;
-                            
-                            if (itemName.endsWith('_BLN')) {
-                                let index = this.morphTargetLookup[itemName];
-                                let body = scene.getObjectByName('body_MSH');
-                                body.morphTargetInfluences[index] = 1;
-                            }
-                            else if (itemName.endsWith('_MSH')) {
-                                selectedObj.material.visible = true;
-                            }
-                        }
-                        else {
-                            if (itemName.endsWith('_BLN')) {
-                                let index = this.morphTargetLookup[itemName];
-                                let body = scene.getObjectByName('body_MSH');
-                                body.morphTargetInfluences[index] = 0;
-                            }
-                            else if (itemName.endsWith('_MSH')) {
-                                selectedObj.material.visible = false;
-                            }
-                        }
-                    }
+            let itemName = this.data[category].items[i];
+            let selectedObj = this.getObjectByName(itemName);
+
+            if (i == selectedItemIndex) {
+                if (itemName.endsWith('_BLN')) {
+                    let index = this.morphTargetLookup[itemName];
+                    let body = scene.getObjectByName('body_MSH');
+                    body.morphTargetInfluences[index] = 1;
+                }
+                else if (itemName.endsWith('_MSH')) {
+                    selectedObj.material.visible = true;
+                }
+            }
+            else {
+                if (itemName.endsWith('_BLN')) {
+                    let morphTargetIndex = this.morphTargetLookup[itemName];
+                    let body = scene.getObjectByName('body_MSH');
+                    body.morphTargetInfluences[morphTargetIndex] = 0;
+                }
+                else if (itemName.endsWith('_MSH')) {
+                    selectedObj.material.visible = false;
                 }
             }
         }
     }
 
-    colorItem(color, itemName){
+    colorItem(colorIndex, categoryName, itemIndex){
+
+        let category = this.data[categoryName];
+
+        // Sanity check: does category allow colors?
+        if (category.colors.length == 0) {
+            return;
+        }
+
+        category.selectedColorIndex = colorIndex;
         let item;
-        this.traverse(function(child) {
-            if (child.name == itemName) {
-                item = child;
-            }
-        });
-        item.material.color = new THREE.Color(color);
+
+        // Temp hack for body
+        if (categoryName == 'overall') {
+            item = scene.getObjectByName('body_MSH'); 
+        }
+        else {
+            this.traverse(function(child) {
+                if (child.name == category.items[itemIndex]) {
+                    item = child;
+                }
+            });
+        }
+        item.material.color = new THREE.Color(category.colors[colorIndex]);
+
     }
 
     showCharacter(){

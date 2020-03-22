@@ -27,7 +27,7 @@ camera.lookAt(50,35,0);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setClearColor(0x7ec0ee, 1);
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 // render loop
 const onAnimationFrameHandler = (timeStamp) => {

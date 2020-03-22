@@ -39,124 +39,107 @@ window.addEventListener('keypress', function(e){
     }
 })
 
-function selectItem(categoryName, selectedItemName){
+function selectItem(category, itemIndex){
 
-    character.selectItem(categoryName, selectedItemName);
+    character.selectItem(category, itemIndex);
     
     // Color the selected item accordingly
-    let color = character.selectedColors[categoryName]; 
-    if (color != 0) {
-        selectColor(color, categoryName, selectedItemName);
-    }
+    let colorIndex = character.data[category].selectedColorIndex; 
+    character.colorItem(colorIndex, category, itemIndex);
 }
 
-function selectColor(color, categoryName, itemName){
+function selectColor(colorIndex, category, itemIndex){
     
-    character.selectedColors[categoryName] = color;
-    character.colorItem(color, itemName);
+    character.colorItem(colorIndex, category, itemIndex);
 }
 
 function populateItems(){
 
-    for (let type in character.data) {
-        for (let category in character.data[type]) {
-            let categoryElement = document.getElementById(category);
-            if (categoryElement){
-                
-                let itemDiv = document.createElement('DIV');
-                $(itemDiv).addClass('item-div');
-                categoryElement.appendChild(itemDiv);
+    let categories = Object.keys(character.data);
+    for (let i in categories) {
+        let category = categories[i];
+        let categoryElement = document.getElementById(category);
+        if (categoryElement) {
 
-                for (let item in character.data[type][category]) {
-                    
-                    let itemName = character.data[type][category][item];
+            // Create div to hold item buttons
+            let itemDiv = document.createElement('DIV');
+            $(itemDiv).addClass('item-div');
+            categoryElement.appendChild(itemDiv);
 
-                    let newButton = document.createElement('LI');
-                    newButton.className += "item-button";
-                    newButton.innerHTML = itemName;
-                    itemDiv.appendChild(newButton);
+            // Create button for each item
+            let categoryItems = character.data[category].items;
+            for (let i in categoryItems) {
+                let newButton = document.createElement('LI');
+                newButton.className += "item-button";
+                newButton.innerHTML = categoryItems[i];
+                itemDiv.appendChild(newButton);
+            }
+
+            // Add item selection callback function
+            $(itemDiv).selectable({
+                selected: function(event, ui){
+                    let itemIndex = Array.from(ui.selected.parentNode.childNodes).indexOf(ui.selected);
+                    selectItem(category, itemIndex);
+
+                    // Disallow multi-select
+                    $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
                 }
+            });
 
-                $(itemDiv).selectable({
-                    selected: function(event, ui){
-                        let categoryName = ui.selected.parentNode.parentNode.id;
-                        let itemName = ui.selected.innerText;
-                        selectItem(categoryName, itemName);
-
-                        // Deselect all other items in category
-                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
-                    }
-                });
+            // Select first item in each category by default
+            let itemMenu = categoryElement.children[0];
+            if (itemMenu.children[0]) {
+                itemMenu.children[0].classList.add('ui-selected');
+                selectItem(category, 0); 
             }
         }
     }
-    // Select first item in every category by default
-    let itemMenus = document.getElementsByClassName('item-div');
-    for (let i=0; i < itemMenus.length; i++) {
-        if (itemMenus[i].children.length > 0) {
-            
-            // Make UI display selection
-            itemMenus[i].children[0].classList.add('ui-selected');
-
-            // Also programmatically select element                
-            let categoryName = itemMenus[i].parentNode.id; 
-            let itemName = itemMenus[i].children[0].innerText;
-            selectItem(categoryName, itemName);
-        }   
-    } 
 }
 
 function populateColors(){
-    for (let type in character.data) {
-        for (let category in character.data[type]) {
-            let categoryElement = document.getElementById(category);
-            if (categoryElement)
-            {
-                let colorDiv = document.createElement('DIV');
-                $(colorDiv).addClass('color-div');
-                categoryElement.appendChild(colorDiv);
+    
+    let categories = Object.keys(character.data);
+    for (let i in categories) {
+        let category = categories[i];
+        let categoryElement = document.getElementById(category);
+        if (categoryElement) {
 
-                // Get list of colors for this category
-                let colors = character.categoryColors[category];
-                
-                // Create color button
-                for (let i=0; i < colors.length; i++) {
-                    let newButton = document.createElement('LI');
-                    $(newButton).addClass('color-button');
-                    newButton.style.backgroundColor = getHexColorAsString(colors[i]);
-                    colorDiv.appendChild(newButton);
+            // Create div to hold color buttons
+            let colorDiv = document.createElement('DIV');
+            $(colorDiv).addClass('color-div');
+            categoryElement.appendChild(colorDiv);
+
+            // Create button for each color
+            let categoryColors = character.data[category].colors;
+            for (let i in categoryColors) {
+                let newButton = document.createElement('LI');
+                $(newButton).addClass('color-button');
+                newButton.style.backgroundColor = getHexColorAsString(categoryColors[i]);
+                colorDiv.appendChild(newButton);
+            }
+
+            // Add color selection callback function
+            $(colorDiv).selectable({
+                selected: function(event, ui){
+                    let colorIndex = Array.from(ui.selected.parentNode.childNodes).indexOf(ui.selected);
+                    let itemIndex = character.data[category].selectedItemIndex;
+
+                    selectColor(colorIndex, category, itemIndex);
+
+                    // Disallow multi-select
+                    $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
                 }
+            });
 
-                $(colorDiv).selectable({
-                    selected: function(event, ui){
-                        let color = ui.selected.style.backgroundColor;
-                        let categoryName = ui.selected.parentNode.parentNode.id;
-                        let itemName = character.selectedItems[categoryName];
-
-                        selectColor(color, categoryName, itemName);
-
-                        // Deselect all other colors in category
-                        $(ui.selected).addClass("ui-selected").siblings().removeClass("ui-selected");           
-                    }
-                });
+            // Select first color in each category by default
+            let colorMenu = categoryElement.children[1];
+            if (colorMenu.children[0]) {
+                colorMenu.children[0].classList.add('ui-selected');
+                let itemIndex = character.data[category].selectedItemIndex;
+                selectColor(0, category, itemIndex);
             }
         }
     }
-    // Select first color in every category by default
-    let colorMenus = document.getElementsByClassName('color-div');
-    for (let i=0; i < colorMenus.length; i++) {
-        if (colorMenus[i].children.length > 0) {
-            
-            // Make UI display selection
-            colorMenus[i].children[0].classList.add('ui-selected');
-
-            // Also programmatically select element                
-            let color = colorMenus[i].children[0].style.backgroundColor; 
-            let categoryName = colorMenus[i].parentNode.id;
-            let itemName = character.selectedItems[categoryName];
-            selectColor(color, categoryName, itemName);
-        }   
-    } 
 }
 
 function getHexColorAsString(hexColor){

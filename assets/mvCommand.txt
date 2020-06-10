@@ -1,0 +1,1 @@
+Move-Item -Path "C:\Users\Wayne Yip\Documents\GitHub\polyme\character.glb" -Destination "C:\Users\Wayne Yip\Documents\GitHub\polyme\assets\character.glb"

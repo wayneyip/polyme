@@ -12,6 +12,5 @@ class Environment extends THREE.Group
 	floor.receiveShadow = true;
 
     this.add(floor);
-
   }
 }

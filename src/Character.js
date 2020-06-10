@@ -21,19 +21,20 @@ class Character extends THREE.Group
         // Initial setup
         super();
         this.data = {
-            'overall':  new Category('overall', 'body',     [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30]),
-            'face':     new Category('face',    'body',     []),
-            'hair':     new Category('hair',    'body',     [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99]),
-            'eyes':     new Category('eyes',    'body',     []),
-            'brows':    new Category('brows',   'body',     [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99]),
-            'nose':     new Category('nose',    'body',     []),
-            'mouth':    new Category('mouth',   'body',     []),
-            'ears':     new Category('ears',    'body',     []),
-            'top':      new Category('top',     'clothes',  [0xeae2dc, 0x645f3f, 0x20419a, 0xef4848, 0xf34976, 0x8063d5, 0x0ca2bd]),
-            'bottom':   new Category('bottom',  'clothes',  [0x1560bd, 0x654321, 0x333333, 0xe1e1e1]),
-            'shoes':    new Category('shoes',   'clothes',  [0x3d3d3d, 0xeae2dc, 0x60371f]),
+            'body':     new Category('body',    'appearance',   [0xffe0bd, 0xe4b98e, 0xd99164, 0xbb6d4a, 0x813e30]),
+            'face':     new Category('face',    'appearance',   []),
+            'hair':     new Category('hair',    'appearance',   [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99]),
+            'eyes':     new Category('eyes',    'appearance',   []),
+            'brows':    new Category('brows',   'appearance',   [0x3d3d3d, 0x4f1a00, 0x663306, 0xaa8866, 0xdebe99]),
+            'nose':     new Category('nose',    'appearance',   []),
+            'mouth':    new Category('mouth',   'appearance',   []),
+            'ears':     new Category('ears',    'appearance',   []),
+            'top':      new Category('top',     'clothes',      [0xeae2dc, 0x645f3f, 0x20419a, 0xef4848, 0xf34976, 0x8063d5, 0x0ca2bd]),
+            'bottom':   new Category('bottom',  'clothes',      [0x1560bd, 0x654321, 0x333333, 0xe1e1e1]),
+            'shoes':    new Category('shoes',   'clothes',      [0x3d3d3d, 0xeae2dc, 0x60371f]),
         };
         this.morphTargetLookup = {};
+        var self = this;
 
         // Loader
         let gltfLoader = new THREE.GLTFLoader(manager);
@@ -45,27 +46,12 @@ class Character extends THREE.Group
             // let helper = new THREE.SkeletonHelper(rig.children[0]);
             // this.add(helper);
 
-            // Handle eye material
-            let LF_eye_obj = file.scene.getObjectByName('LF_eye_MSH');
-            let RT_eye_obj = file.scene.getObjectByName('RT_eye_MSH');
-            let eyeMaterial = new THREE.MeshPhongMaterial( 
-                {
-                    map:        texLoader.load('assets/eye.png'),
-                    specular:   0xffffff,
-                    shininess:  50,
-                    skinning:   true,
-                    visible:    false
-                } 
-            );
-            LF_eye_obj.material = eyeMaterial;
-            RT_eye_obj.material = eyeMaterial;
-
             // Handle body/skin material
             let body_obj = file.scene.getObjectByName('body_MSH');
             let bodyMaterial = new THREE.MeshPhongMaterial({
-                skinning: true,
-                morphTargets: true,
-                visible: false
+                skinning:       true,
+                morphTargets:   true,
+                visible:        false
             });
             body_obj.material = bodyMaterial;
             body_obj.castShadow = true;
@@ -81,40 +67,57 @@ class Character extends THREE.Group
                     let morphTargetName = property[1].value;
                     let category = morphTargetName.split('_')[0];
 
-                    this.data[category].items.push(morphTargetName);
+                    self.data[category].items.push(morphTargetName);
 
                     // Also map the morph target's name to its index
                     let morphTargetIndex = property[0].split('_')[1];
-                    this.morphTargetLookup[morphTargetName] = morphTargetIndex;
+                    self.morphTargetLookup[morphTargetName] = morphTargetIndex;
                 }
             }
 
+            // Get root node
+            let rootNode = file.scene.children[0];
+            rootNode.scale.set(100,100,100); // fbx2gltf exporter peculiarity
+            
             // Fill this character's data JSON with mesh data
-            let sceneObjects = file.scene.children[0].children;
-            while (sceneObjects.length > 0)
+            rootNode.traverse(function(child) 
             {
-                let sceneObject = sceneObjects[0];
-                if (sceneObject.name.endsWith('_GRP')) 
+                // Handle eye textures
+                if (child.name.endsWith('eye_MSH'))
                 {
-                    let category = sceneObject.name.split('_')[0];
-
-                    for (let i=0; i < sceneObject.children.length; i++)
-                    {
-                        let item = sceneObject.children[i];
-                        this.data[category].items.push(item.name);
+                    let eyeMaterial = new THREE.MeshPhongMaterial( 
+                        {
+                            map:        texLoader.load('assets/eye.png'),
+                            specular:   0xffffff,
+                            shininess:  200,
+                            skinning:   true,
+                            visible:    false
+                        } 
+                    );
+                    child.material = eyeMaterial;
+                }
+                // Hide inner mouth meshes
+                else if (child.parent.name == 'mouth_GRP')
+                {
+                    child.material.visible = false;
+                }
+                // Handle all other meshes
+                else if (child.name.endsWith('_MSH')) 
+                {
+                    let item = child;
+                    let category = item.name.split('_')[0];
+                    self.data[category].items.push(item.name);
 
                         // Assign threejs material
-                        item.material = new THREE.MeshPhongMaterial({
-                            skinning: true,
-                            side: THREE.DoubleSide,
-                            visible: false
-                        });
-                        item.castShadow = true;
-                    }
+                    item.material = new THREE.MeshPhongMaterial({
+                        skinning:   true,
+                        side:       THREE.DoubleSide,
+                        visible:    false
+                    });
+                    item.castShadow = true;
                 }
-                sceneObject.scale.set(100,100,100); // fbx2gltf exporter peculiarity
-                this.add(sceneObject);
-            }
+            });
+            this.add(rootNode);
         });
     }
 
@@ -170,7 +173,7 @@ class Character extends THREE.Group
         let item;
 
         // Temp hack for body
-        if (categoryName == 'overall') 
+        if (categoryName == 'body') 
         {
             item = scene.getObjectByName('body_MSH'); 
         }
@@ -189,24 +192,18 @@ class Character extends THREE.Group
 
     showCharacter()
     {
-        let body, LF_eye, RT_eye;
         this.traverse(function(child) 
         {
-            if (child.name == 'body_MSH') 
+            if (child.name == 'body_MSH' ||
+                child.name == 'LF_eye_MSH' ||
+                child.name == 'RT_eye_MSH' ||
+                child.name.startsWith('teeth') ||
+                child.name.startsWith('gums') ||
+                child.name == 'tongue_MSH' ||
+                child.name == 'mouth_inner_MSH') 
             {
-                body = child;
-            }
-            else if (child.name == 'LF_eye_MSH')
-            {
-                LF_eye = child;
-            }
-            else if (child.name == 'RT_eye_MSH') 
-            {
-                RT_eye = child;
+                child.material.visible = true;
             }
         });
-        body.material.visible = true;
-        LF_eye.material.visible = true;
-        RT_eye.material.visible = true;
     }
 }

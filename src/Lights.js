@@ -5,8 +5,8 @@ class Lights extends THREE.Group
     super(...args);
 
     const dir = new THREE.DirectionalLight(0xFFFFFF, 0.1);
-    const spot = new THREE.SpotLight(0xFFFFFF, 0.2, 0, 0.8, 1, 1);
-    const ambi = new THREE.AmbientLight( 0x404040 , 0.66);
+    const spot = new THREE.SpotLight(0xFFFFFF, 0.2, 0, 0.7, 1, 1);
+    const ambi = new THREE.AmbientLight( 0x404040 , 0.33);
     const hemi = new THREE.HemisphereLight( 0xFFFFFF, 0x080820, 1 )
 
     spot.position.set(0, 50, 100);

@@ -1,14 +1,14 @@
 .type-menu {
 	position: fixed;
 	top: 8%;
-	right: 5%;
+	right: 8%;
 	width: 700px;
 	min-height: 500px;
 }
 
 .ui-tabs-vertical > .ui-tabs-nav { 
   position: absolute; 
-  width: 6em; 
+  width: 9em; 
   left: 0; 
   top: 0; 
   bottom: 0; 
@@ -37,14 +37,14 @@
 } 
 .ui-tabs-vertical > .ui-tabs-panel { 
   height: 500px;
-  margin-left: 6em;
+  margin-left: 9em;
   position: relative;
 }
 
 .category-menu .ui-tabs-nav { 
-    padding: 0em; 
-    background: transparent; 
-    border-width: 0px; 
+  padding: 0em; 
+  background: transparent; 
+  border-width: 0px; 
 } 
 .category-menu .ui-tabs-nav li { 
   position: static; 
@@ -84,10 +84,10 @@
 	width: 60px;
   
   display: inline-block;
-	text-align: center;
+  margin-right: 10px;
+  margin-bottom: 10px;
 
-	margin-right: 10px;
-	margin-bottom: 10px;
+	text-align: center;
 }
 
 .item-button:hover, .ui-selecting {
@@ -104,17 +104,12 @@
 .color-div {
 	position: absolute;
 	bottom: 0;
-
-/*	width: 500px;
-	background-image: linear-gradient(white, lightgray, white);
-	border: solid 1px lightgray;
-	border-radius: 5px;*/
 }
 
 .color-button {
 	list-style-type: none;
 	
-	border: solid 1px lightgray;
+	border: double 5px transparent;
 	border-radius: 100%;
 	height: 60px;
 	width: 60px;
@@ -123,6 +118,10 @@
 
 	margin-right: 10px;
 	margin-bottom: 10px;
+}
+
+.color-button:hover {
+  border: double 5px gray;
 }
 
 .color-button.ui-selected {

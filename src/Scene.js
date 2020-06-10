@@ -8,7 +8,10 @@
  */
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera();
-const renderer = new THREE.WebGLRenderer({antialias: true});
+const renderer = new THREE.WebGLRenderer({
+	antialias: true,
+	preserveDrawingBuffer: true
+});
 
 // scene
 var isCharLoaded = false;

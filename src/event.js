@@ -30,14 +30,6 @@ window.addEventListener('keydown', function(e){
         body.rotateX(0.05);
     }
 })
-window.addEventListener('keypress', function(e){
-
-    if (e.code == 'KeyS')
-    {
-        let body = scene.getObjectByName("body_MSH");
-        body.morphTargetInfluences[2] = 1;
-    }
-})
 
 function selectItem(category, itemIndex)
 {
@@ -73,7 +65,7 @@ function populateItems()
             {
                 let newButton = document.createElement('LI');
                 newButton.className += "item-button";
-                newButton.innerHTML = categoryItems[i];
+                newButton.innerHTML = categoryItems[i].split('_')[1];
                 itemDiv.appendChild(newButton);
             }
 
@@ -102,7 +94,6 @@ function populateItems()
 
 function populateColors()
 {
-    
     let categories = Object.keys(character.data);
     for (let i in categories) 
     {
